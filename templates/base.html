@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}{{ site.name }}{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-  <link rel="icon" href="{{ url_for('static', filename='images/logo.svg') }}">
+  <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
 </head>
 <body>
   <header class="site-header">
@@ -17,7 +17,7 @@
     </div>
     <div class="container nav-inner">
       <a href="{{ url_for('home') }}" class="brand">
-        <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="{{ site.name }}" class="logo">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="{{ site.name }}" class="logo">
         <span class="brand-name">{{ site.name }}</span>
       </a>
       <nav class="main-nav">
