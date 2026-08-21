@@ -27,7 +27,7 @@ img{max-width:100%;display:block}
 .top-bar-inner a:hover{color:#ffd9d9}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;padding-top:12px;padding-bottom:12px}
 .brand{display:flex;align-items:center;gap:10px}
-.logo{height:44px;width:auto;display:block}
+.logo{height:56px;width:auto;display:block}
 .brand-name{font-weight:700;font-size:1.25rem;color:var(--primary-dark);letter-spacing:.5px}
 .main-nav{display:flex;gap:24px;align-items:center}
 .main-nav a{color:var(--text);font-weight:600;font-size:.95rem;padding:4px 0;border-bottom:2px solid transparent}
