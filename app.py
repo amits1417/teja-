@@ -41,7 +41,43 @@ SITE = {
     "footer_text": "By Supreme International",
 }
 
-DEFAULT_CATEGORIES = ["COSMETIC", "SKINCARE", "PERSONAL CARE", "CUSTOM OEM"]
+DEFAULT_CATEGORIES = [
+    {"name": "COSMETIC", "image": "cat_cosmetic.png",
+     "desc": "Bottles, jars and closures for cosmetic and makeup packaging."},
+    {"name": "SKINCARE", "image": "cat_skincare.png",
+     "desc": "Jars, pumps and droppers for skincare and serum formulations."},
+    {"name": "PERSONAL CARE", "image": "cat_personal.png",
+     "desc": "Bottles, pumps and sticks for personal care products."},
+    {"name": "CUSTOM OEM", "image": "cat_oem.png",
+     "desc": "Custom moulded components and OEM packaging solutions."},
+]
+
+DEFAULT_PRODUCTS = {
+    "COSMETIC": [
+        ("Cosmetic Jar 30ml", "prod_cosmetic_1.png", "PET", "30 ml"),
+        ("Cosmetic Bottle 100ml", "prod_cosmetic_2.png", "PET", "100 ml"),
+        ("Lip Gloss Tube", "prod_cosmetic_3.png", "PP", "10 g"),
+        ("Compact Case", "prod_cosmetic_4.png", "ABS", "15 g"),
+    ],
+    "SKINCARE": [
+        ("Skincare Cream Jar", "prod_skincare_1.png", "PP", "50 g"),
+        ("Serum Dropper Bottle", "prod_skincare_2.png", "Glass", "30 ml"),
+        ("Lotion Pump Bottle", "prod_skincare_3.png", "PET", "200 ml"),
+        ("Face Mask Pouch", "prod_skincare_4.png", "Laminate", "25 ml"),
+    ],
+    "PERSONAL CARE": [
+        ("Shampoo Bottle", "prod_personal_1.png", "HDPE", "300 ml"),
+        ("Body Wash Pump", "prod_personal_2.png", "PET", "500 ml"),
+        ("Deodorant Stick", "prod_personal_3.png", "PP", "75 g"),
+        ("Soap Box", "prod_personal_4.png", "PP", "100 g"),
+    ],
+    "CUSTOM OEM": [
+        ("Custom Molded Jar", "prod_custom_1.png", "Custom", "Custom"),
+        ("Custom Bottle", "prod_custom_2.png", "Custom", "Custom"),
+        ("Custom Closure", "prod_custom_3.png", "Custom", "Custom"),
+        ("OEM Component", "prod_custom_4.png", "Custom", "Custom"),
+    ],
+}
 
 
 # ---------------- DB helpers ----------------
@@ -84,14 +120,37 @@ def init_db():
 
 def seed_defaults():
     conn = get_db()
-    existing = {row["name"] for row in conn.execute("SELECT name FROM categories").fetchall()}
-    for i, name in enumerate(DEFAULT_CATEGORIES):
-        if name not in existing:
+    # Categories (with image + description)
+    existing_cat = {row["name"] for row in conn.execute("SELECT name FROM categories").fetchall()}
+    cat_ids = {}
+    for i, c in enumerate(DEFAULT_CATEGORIES):
+        if c["name"] not in existing_cat:
             conn.execute(
-                "INSERT INTO categories (name, slug, position) VALUES (?,?,?)",
-                (name, slugify(name), i),
+                "INSERT INTO categories (name, slug, image, description, position) "
+                "VALUES (?,?,?,?,?)",
+                (c["name"], slugify(c["name"]), c["image"], c["desc"], i),
             )
-            existing.add(name)
+        else:
+            conn.execute(
+                "UPDATE categories SET image=?, description=? WHERE name=?",
+                (c["image"], c["desc"], c["name"]),
+            )
+        row = conn.execute("SELECT id FROM categories WHERE name=?", (c["name"],)).fetchone()
+        cat_ids[c["name"]] = row["id"]
+
+    # Products (4 per category) — insert only if not already present
+    existing_prod = {row["name"] for row in conn.execute("SELECT name FROM products").fetchall()}
+    for cname, plist in DEFAULT_PRODUCTS.items():
+        cid = cat_ids.get(cname)
+        for j, (pname, img, material, cap) in enumerate(plist):
+            if pname not in existing_prod:
+                conn.execute(
+                    "INSERT INTO products (category_id, name, slug, image, material, "
+                    "capacity, description, position) VALUES (?,?,?,?,?,?,?,?)",
+                    (cid, pname, slugify(pname + "-" + str(j)), img, material,
+                     cap, pname + " — premium packaging solution by " + SITE["name"] + ".", j),
+                )
+                existing_prod.add(pname)
     conn.commit()
     conn.close()
 
