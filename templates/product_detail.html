@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{ p.name }} - {{ site.name }}{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container product-detail">
+    <div class="product-img">
+      {% if p.image %}
+        <img src="{{ url_for('uploaded_file', filename=p.image) }}" alt="{{ p.name }}">
+      {% else %}
+        <div class="prod-ph big"></div>
+      {% endif %}
+    </div>
+    <div class="product-info">
+      <h1>{{ p.name }}</h1>
+      <table class="spec-table">
+        {% if p.material %}<tr><th>Material</th><td>{{ p.material }}</td></tr>{% endif %}
+        {% if p.capacity %}<tr><th>Capacity</th><td>{{ p.capacity }}</td></tr>{% endif %}
+        {% if p.shape %}<tr><th>Shape</th><td>{{ p.shape }}</td></tr>{% endif %}
+        {% if p.application %}<tr><th>Application</th><td>{{ p.application }}</td></tr>{% endif %}
+      </table>
+      {% if p.description %}<p class="prod-desc">{{ p.description }}</p>{% endif %}
+      <a href="{{ url_for('contact') }}" class="btn">Enquire Now</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

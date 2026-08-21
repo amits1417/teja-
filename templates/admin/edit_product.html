@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}{% if prod %}Edit{% else %}New{% endif %} Product - Admin{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="admin-bar">
+      <h1>{% if prod %}Edit Product{% else %}New Product{% endif %}</h1>
+      <a href="{{ url_for('admin_products') }}" class="btn btn-outline">← Back</a>
+    </div>
+    <form method="post" enctype="multipart/form-data" class="admin-form">
+      <label>Product Name <input type="text" name="name" value="{{ prod.name if prod else '' }}" required></label>
+      <label>Category
+        <select name="category_id">
+          <option value="">— Uncategorized —</option>
+          {% for c in cats %}
+          <option value="{{ c.id }}" {% if prod and prod.category_id == c.id %}selected{% endif %}>{{ c.name }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>Material <input type="text" name="material" value="{{ prod.material if prod else '' }}" placeholder="PET, HDPE, PP..."></label>
+      <label>Capacity <input type="text" name="capacity" value="{{ prod.capacity if prod else '' }}" placeholder="100 ml, 50g..."></label>
+      <label>Shape <input type="text" name="shape" value="{{ prod.shape if prod else '' }}"></label>
+      <label>Application <input type="text" name="application" value="{{ prod.application if prod else '' }}" placeholder="Personal care, pharma..."></label>
+      <label>Description <textarea name="description" rows="4">{{ prod.description if prod else '' }}</textarea></label>
+      <label>Position <input type="number" name="position" value="{{ prod.position if prod else 0 }}"></label>
+      <label>Current Image {% if prod and prod.image %}<img src="{{ url_for('uploaded_file', filename=prod.image) }}" class="thumb">{% else %}None{% endif %}</label>
+      <label>Upload Image <input type="file" name="image" accept="image/*"></label>
+      <button type="submit" class="btn">Save Product</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

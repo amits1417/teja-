@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}{{ site.name }} - {{ site.tagline }}{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="container">
+    <h1>{{ site.tagline }}</h1>
+    <p>Premium rigid packaging solutions - bottles, jars, caps and pumps manufactured in-house with complete control from development to delivery.</p>
+    <a href="{{ url_for('products') }}" class="btn">Explore Products</a>
+    <a href="{{ url_for('contact') }}" class="btn btn-outline">Get in Touch</a>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="container stats-grid">
+    <div class="stat"><h3>Pan India</h3><p>Nationwide Presence</p></div>
+    <div class="stat"><h3>750+</h3><p>SKU</p></div>
+    <div class="stat"><h3>In-house</h3><p>Lotion Pumps</p></div>
+    <div class="stat"><h3>Custom</h3><p>Tooling & Finishing</p></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">Product Categories</h2>
+    <div class="cat-grid">
+      {% for c in cats %}
+      <a class="cat-card" href="{{ url_for('category', slug=c.slug) }}">
+        {% if c.image %}
+          <img src="{{ url_for('uploaded_file', filename=c.image) }}" alt="{{ c.name }}">
+        {% else %}
+          <div class="cat-ph"></div>
+        {% endif %}
+        <h3>{{ c.name }}</h3>
+      </a>
+      {% else %}
+      <p>No categories yet. Add them from the <a href="{{ url_for('admin_categories') }}">admin panel</a>.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% if featured %}
+<section class="section section-alt">
+  <div class="container">
+    <h2 class="section-title">Featured Products</h2>
+    <div class="prod-grid">
+      {% for p in featured %}
+      <a class="prod-card" href="{{ url_for('product_detail', slug=p.slug) }}">
+        {% if p.image %}
+          <img src="{{ url_for('uploaded_file', filename=p.image) }}" alt="{{ p.name }}">
+        {% else %}
+          <div class="prod-ph"></div>
+        {% endif %}
+        <h4>{{ p.name }}</h4>
+        <p class="muted">{{ p.cat_name or 'Uncategorized' }}</p>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="section cta">
+  <div class="container">
+    <h2>Need a custom packaging solution?</h2>
+    <p>From 3D prototyping to tooling, manufacturing and finishing - all in-house.</p>
+    <a href="{{ url_for('contact') }}" class="btn">Contact Us</a>
+  </div>
+</section>
+{% endblock %}

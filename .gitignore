@@ -1,0 +1,6 @@
+run.err
+run.log
+teja.db
+__pycache__/
+*.pyc
+.env

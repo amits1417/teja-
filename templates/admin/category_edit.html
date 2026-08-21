@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Edit Category - Admin{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="admin-bar">
+      <h1>Edit Category</h1>
+      <a href="{{ url_for('admin_categories') }}" class="btn btn-outline">← Back</a>
+    </div>
+    <form method="post" enctype="multipart/form-data" class="admin-form">
+      <label>Name <input type="text" name="name" value="{{ cat.name }}" required></label>
+      <label>Description <textarea name="description" rows="2">{{ cat.description }}</textarea></label>
+      <label>Position <input type="number" name="position" value="{{ cat.position }}"></label>
+      <label>Current Image {% if cat.image %}<img src="{{ url_for('uploaded_file', filename=cat.image) }}" class="thumb">{% else %}None{% endif %}</label>
+      <label>Replace Image <input type="file" name="image" accept="image/*"></label>
+      <button type="submit" class="btn">Update Category</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Products - Admin{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="admin-bar">
+      <h1>Manage Products</h1>
+      <a href="{{ url_for('admin_product_edit') }}" class="btn">+ New Product</a>
+      <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline">← Dashboard</a>
+    </div>
+    <table class="admin-table">
+      <tr><th>Image</th><th>Name</th><th>Category</th><th>Actions</th></tr>
+      {% for p in items %}
+      <tr>
+        <td>{% if p.image %}<img src="{{ url_for('uploaded_file', filename=p.image) }}" class="thumb">{% else %}—{% endif %}</td>
+        <td>{{ p.name }}</td>
+        <td>{{ p.cat_name or '—' }}</td>
+        <td>
+          <a href="{{ url_for('admin_product_edit', pid=p.id) }}" class="btn btn-sm">Edit</a>
+          <form method="post" style="display:inline" onsubmit="return confirm('Delete this product?');">
+            <input type="hidden" name="action" value="delete">
+            <input type="hidden" name="id" value="{{ p.id }}">
+            <button class="btn btn-sm btn-danger">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</section>
+{% endblock %}

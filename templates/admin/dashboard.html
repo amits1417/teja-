@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - Admin{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="admin-bar">
+      <h1>Admin Dashboard</h1>
+      <a href="{{ url_for('admin_logout') }}" class="btn btn-outline">Logout</a>
+    </div>
+    <div class="admin-cards">
+      <div class="admin-card">
+        <h3>{{ cat_count }}</h3>
+        <p>Categories</p>
+        <a href="{{ url_for('admin_categories') }}" class="btn">Manage</a>
+      </div>
+      <div class="admin-card">
+        <h3>{{ prod_count }}</h3>
+        <p>Products</p>
+        <a href="{{ url_for('admin_products') }}" class="btn">Manage</a>
+      </div>
+    </div>
+    <p><a href="{{ url_for('home') }}" target="_blank">View live site →</a></p>
+  </div>
+</section>
+{% endblock %}

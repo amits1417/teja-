@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}{{ cat.name }} - {{ site.name }}{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <h1>{{ cat.name }}</h1>
+    {% if cat.description %}<p>{{ cat.description }}</p>{% endif %}
+  </div>
+</section>
+<section class="section">
+  <div class="container">
+    <div class="prod-grid">
+      {% for p in items %}
+      <a class="prod-card" href="{{ url_for('product_detail', slug=p.slug) }}">
+        {% if p.image %}
+          <img src="{{ url_for('uploaded_file', filename=p.image) }}" alt="{{ p.name }}">
+        {% else %}
+          <div class="prod-ph"></div>
+        {% endif %}
+        <h4>{{ p.name }}</h4>
+        <p class="muted">{{ p.material or '' }} {% if p.capacity %} · {{ p.capacity }}{% endif %}</p>
+      </a>
+      {% else %}
+      <p>No products in this category yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

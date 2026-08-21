@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Contact - {{ site.name }}{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <h1>Contact Us</h1>
+    <p>We would love to hear about your packaging requirements.</p>
+  </div>
+</section>
+<section class="section">
+  <div class="container contact-grid">
+    <div class="contact-info">
+      <h3>{{ site.name }}</h3>
+      <p>Phone: <a href="tel:{{ site.phone_href }}">{{ site.phone }}</a></p>
+      <p>Email: <a href="mailto:{{ site.email }}">{{ site.email }}</a></p>
+    </div>
+    <form class="contact-form" method="post">
+      <label>Full Name
+        <input type="text" name="name" required>
+      </label>
+      <label>Company Name
+        <input type="text" name="company">
+      </label>
+      <label>Phone No.
+        <input type="text" name="phone" required>
+      </label>
+      <label>Email ID
+        <input type="email" name="email" required>
+      </label>
+      <label>Message
+        <textarea name="message" rows="4"></textarea>
+      </label>
+      <button type="submit" class="btn">Send Message</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

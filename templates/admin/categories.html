@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Categories - Admin{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="admin-bar">
+      <h1>Manage Categories</h1>
+      <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline">← Dashboard</a>
+    </div>
+
+    <h3>Add New Category</h3>
+    <form method="post" enctype="multipart/form-data" class="admin-form">
+      <input type="hidden" name="action" value="add">
+      <label>Name <input type="text" name="name" required></label>
+      <label>Description <textarea name="description" rows="2"></textarea></label>
+      <label>Position <input type="number" name="position" value="0"></label>
+      <label>Image <input type="file" name="image" accept="image/*"></label>
+      <button type="submit" class="btn">Add Category</button>
+    </form>
+
+    <h3>Existing Categories</h3>
+    <table class="admin-table">
+      <tr><th>Image</th><th>Name</th><th>Position</th><th>Actions</th></tr>
+      {% for c in cats %}
+      <tr>
+        <td>{% if c.image %}<img src="{{ url_for('uploaded_file', filename=c.image) }}" class="thumb">{% else %}—{% endif %}</td>
+        <td>{{ c.name }}</td>
+        <td>{{ c.position }}</td>
+        <td>
+          <a href="{{ url_for('admin_category_edit', cid=c.id) }}" class="btn btn-sm">Edit</a>
+          <form method="post" style="display:inline" onsubmit="return confirm('Delete this category?');">
+            <input type="hidden" name="action" value="delete">
+            <input type="hidden" name="id" value="{{ c.id }}">
+            <button class="btn btn-sm btn-danger">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</section>
+{% endblock %}
