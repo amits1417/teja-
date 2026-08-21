@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Banners - Admin{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="admin-bar">
+      <h1>Manage Homepage Banners</h1>
+      <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline">← Dashboard</a>
+    </div>
+
+    <h3 style="margin-top:20px;margin-bottom:10px;">Add New Banner</h3>
+    <form method="post" enctype="multipart/form-data" class="admin-form" style="margin-bottom:30px;">
+      <input type="hidden" name="action" value="add">
+      <div style="margin-bottom:15px;">
+        <label style="display:block;margin-bottom:5px;font-weight:600;">Banner Image <span style="color:red">*</span></label>
+        <input type="file" name="image" accept="image/*" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;">
+      </div>
+      <div style="margin-bottom:15px;">
+        <label style="display:block;margin-bottom:5px;font-weight:600;">Title / Caption</label>
+        <input type="text" name="title" placeholder="e.g. Cosmetic Packaging Range" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;">
+      </div>
+      <div style="margin-bottom:15px;">
+        <label style="display:block;margin-bottom:5px;font-weight:600;">Display Position</label>
+        <input type="number" name="position" value="0" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;">
+      </div>
+      <button type="submit" class="btn" style="margin:0;">Upload Banner</button>
+    </form>
+
+    <h3 style="margin-bottom:10px;">Current Banners</h3>
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Banner Image</th>
+          <th>Title / Caption</th>
+          <th>Position</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for b in banners %}
+        <tr>
+          <td>
+            <img src="{{ url_for('uploaded_file', filename=b.image) }}" class="thumb" style="width:120px;height:70px;object-fit:cover;border-radius:4px;">
+          </td>
+          <td>{{ b.title or '—' }}</td>
+          <td>{{ b.position }}</td>
+          <td>
+            <form method="post" style="display:inline" onsubmit="return confirm('Delete this banner?');">
+              <input type="hidden" name="action" value="delete">
+              <input type="hidden" name="id" value="{{ b.id }}">
+              <button class="btn btn-sm btn-danger" style="margin:0;">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="4" style="text-align:center;padding:20px;color:var(--muted);">No banners added yet. Upload one above.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

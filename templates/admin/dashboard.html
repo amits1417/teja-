@@ -18,6 +18,16 @@
         <p>Products</p>
         <a href="{{ url_for('admin_products') }}" class="btn">Manage</a>
       </div>
+      <div class="admin-card">
+        <h3>{{ banner_count }}</h3>
+        <p>Banners (Slideshow)</p>
+        <a href="{{ url_for('admin_banners') }}" class="btn">Manage</a>
+      </div>
+      <div class="admin-card">
+        <h3>Text</h3>
+        <p>Website Content</p>
+        <a href="{{ url_for('admin_settings') }}" class="btn">Edit Text</a>
+      </div>
     </div>
     <p><a href="{{ url_for('home') }}" target="_blank">View live site →</a></p>
   </div>

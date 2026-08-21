@@ -1,21 +1,31 @@
 {% extends "base.html" %}
 {% block title %}{{ site.name }} - {{ site.tagline }}{% endblock %}
 {% block content %}
-<section class="hero">
-  <div class="container">
-    <h1>{{ site.tagline }}</h1>
-    <p>Premium rigid packaging solutions - bottles, jars, caps and pumps manufactured in-house with complete control from development to delivery.</p>
-    <a href="{{ url_for('products') }}" class="btn">Explore Products</a>
-    <a href="{{ url_for('contact') }}" class="btn btn-outline">Get in Touch</a>
+<section class="hero-slider">
+  <div class="slides-container">
+    {% for b in banners %}
+    <div class="slide {% if loop.first %}active{% endif %}">
+      <img src="{{ url_for('uploaded_file', filename=b.image) }}" alt="{{ b.title or 'Banner Image' }}">
+    </div>
+    {% endfor %}
+  </div>
+  
+  <button class="slider-btn prev-btn" aria-label="Previous slide">&#10094;</button>
+  <button class="slider-btn next-btn" aria-label="Next slide">&#10095;</button>
+  
+  <div class="slider-dots">
+    {% for b in banners %}
+    <span class="dot {% if loop.first %}active{% endif %}" data-slide="{{ loop.index0 }}"></span>
+    {% endfor %}
   </div>
 </section>
 
 <section class="stats">
   <div class="container stats-grid">
-    <div class="stat"><h3>Pan India</h3><p>Nationwide Presence</p></div>
-    <div class="stat"><h3>750+</h3><p>SKU</p></div>
-    <div class="stat"><h3>In-house</h3><p>Lotion Pumps</p></div>
-    <div class="stat"><h3>Custom</h3><p>Tooling & Finishing</p></div>
+    <div class="stat"><h3>{{ site.stat1_num }}</h3><p>{{ site.stat1_lbl }}</p></div>
+    <div class="stat"><h3>{{ site.stat2_num }}</h3><p>{{ site.stat2_lbl }}</p></div>
+    <div class="stat"><h3>{{ site.stat3_num }}</h3><p>{{ site.stat3_lbl }}</p></div>
+    <div class="stat"><h3>{{ site.stat4_num }}</h3><p>{{ site.stat4_lbl }}</p></div>
   </div>
 </section>
 
@@ -66,13 +76,13 @@
     <div class="content-grid">
       <div class="content-card">
         <img src="{{ url_for('uploaded_file', filename='content_quality.png') }}" alt="Quality and Precision">
-        <h3>Quality &amp; Precision</h3>
-        <p>Strict quality control at every step of production.</p>
+        <h3>{{ site.quality_title }}</h3>
+        <p>{{ site.quality_text }}</p>
       </div>
       <div class="content-card">
         <img src="{{ url_for('uploaded_file', filename='content_industry.png') }}" alt="Industries We Serve">
-        <h3>Industries We Serve</h3>
-        <p>Cosmetic, skincare, personal care and custom OEM.</p>
+        <h3>{{ site.industry_title }}</h3>
+        <p>{{ site.industry_text }}</p>
       </div>
     </div>
   </div>
@@ -80,9 +90,97 @@
 
 <section class="section cta">
   <div class="container">
-    <h2>Need a custom packaging solution?</h2>
-    <p>From 3D prototyping to tooling, manufacturing and finishing - all in-house.</p>
+    <h2>{{ site.cta_title }}</h2>
+    <p>{{ site.cta_text }}</p>
     <a href="{{ url_for('contact') }}" class="btn">Contact Us</a>
   </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const slides = document.querySelectorAll('.hero-slider .slide');
+  const dots = document.querySelectorAll('.hero-slider .dot');
+  const prevBtn = document.querySelector('.hero-slider .prev-btn');
+  const nextBtn = document.querySelector('.hero-slider .next-btn');
+  
+  let currentSlide = 0;
+  let slideInterval;
+  
+  function showSlide(index) {
+    if (index >= slides.length) {
+      currentSlide = 0;
+    } else if (index < 0) {
+      currentSlide = slides.length - 1;
+    } else {
+      currentSlide = index;
+    }
+    
+    slides.forEach((slide, i) => {
+      if (i === currentSlide) {
+        slide.classList.add('active');
+      } else {
+        slide.classList.remove('active');
+      }
+    });
+    
+    dots.forEach((dot, i) => {
+      if (i === currentSlide) {
+        dot.classList.add('active');
+      } else {
+        dot.classList.remove('active');
+      }
+    });
+  }
+  
+  function nextSlide() {
+    showSlide(currentSlide + 1);
+  }
+  
+  function prevSlide() {
+    showSlide(currentSlide - 1);
+  }
+  
+  function startAutoPlay() {
+    stopAutoPlay();
+    slideInterval = setInterval(nextSlide, 5000); // every 5 seconds
+  }
+  
+  function stopAutoPlay() {
+    if (slideInterval) {
+      clearInterval(slideInterval);
+    }
+  }
+  
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      prevSlide();
+      startAutoPlay();
+    });
+  }
+  
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      nextSlide();
+      startAutoPlay();
+    });
+  }
+  
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      showSlide(index);
+      startAutoPlay();
+    });
+  });
+  
+  const sliderContainer = document.querySelector('.hero-slider');
+  if (sliderContainer) {
+    sliderContainer.addEventListener('mouseenter', stopAutoPlay);
+    sliderContainer.addEventListener('mouseleave', startAutoPlay);
+  }
+  
+  startAutoPlay();
+});
+</script>
 {% endblock %}

@@ -11,28 +11,39 @@
   <div class="container">
     <div class="about-grid">
       <div>
-        <h2 class="section-title" style="text-align:left">Who We Are</h2>
-        <p>{{ site.name }} is a leading manufacturer of premium plastic packaging solutions. We specialize in bottles, jars, and caps that help brands elevate product presentation and shelf appeal. Our commitment to quality and innovation adds measurable value to every product we package.</p>
-        <p>We also stock and import a wide range of packaging components - closures, trigger pumps, cream pumps, spray pumps, airless bottles, containers, and plastic cosmetic jars and bottles - offering complete and customizable packaging solutions under one roof.</p>
+        <h2 class="section-title" style="text-align:left">{{ site.about_who_we_are_title }}</h2>
+        {% for p in site.about_who_we_are_text.split('\n') %}
+          {% if p.strip() %}
+            <p>{{ p }}</p>
+          {% endif %}
+        {% endfor %}
       </div>
       <div>
         <img src="{{ url_for('uploaded_file', filename='content_about.png') }}" alt="Our Facility" class="about-img">
       </div>
     </div>
 
-    <h2 class="section-title">What We Offer</h2>
+    <h2 class="section-title">{{ site.about_what_we_offer_title }}</h2>
     <ul class="offer-list">
-      <li><strong>3D Prototyping</strong> - Review form, functionality and accessibility before tooling.</li>
-      <li><strong>In-house Tooling</strong> - From custom tooling to finished packaging, all managed under one roof.</li>
-      <li><strong>Quality Control</strong> - Superior quality across every step of production.</li>
+      {% for item in site.about_what_we_offer_text.split('\n') %}
+        {% if item.strip() %}
+          {% if ' - ' in item %}
+            {% set parts = item.split(' - ', 1) %}
+            <li><strong>{{ parts[0] }}</strong> - {{ parts[1] }}</li>
+          {% else %}
+            <li>{{ item }}</li>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
     </ul>
 
-    <h2 class="section-title">Sustainability</h2>
-    <p>We integrate recycled and renewable materials across our processes:</p>
+    <h2 class="section-title">{{ site.about_sustainability_title }}</h2>
     <ul class="offer-list">
-      <li>100% PCR PET solutions</li>
-      <li>25-50% PCR HDPE blow-moulded products</li>
-      <li>Wheat grass-based & bamboo fibre renewable alternatives</li>
+      {% for item in site.about_sustainability_text.split('\n') %}
+        {% if item.strip() %}
+          <li>{{ item }}</li>
+        {% endif %}
+      {% endfor %}
     </ul>
   </div>
 </section>

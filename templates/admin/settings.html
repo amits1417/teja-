@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block title %}Website Settings - Admin{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="admin-bar">
+      <h1>Edit Website Text Content</h1>
+      <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline">← Dashboard</a>
+    </div>
+
+    <form method="post" class="admin-form" style="max-width:850px; margin-top:20px;">
+      <!-- Group 1: General Company Info -->
+      <h3 style="border-bottom:2px solid var(--primary);padding-bottom:5px;margin-bottom:15px;color:var(--primary-dark)">1. General Company Info</h3>
+      
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px;">
+        <div>
+          <label style="display:block;margin-bottom:5px;font-weight:600;">Company Name</label>
+          <input type="text" name="name" value="{{ site.name }}" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;">
+        </div>
+        <div>
+          <label style="display:block;margin-bottom:5px;font-weight:600;">Tagline / Slogan</label>
+          <input type="text" name="tagline" value="{{ site.tagline }}" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;">
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px;">
+        <div>
+          <label style="display:block;margin-bottom:5px;font-weight:600;">Contact Person Name</label>
+          <input type="text" name="contact_person" value="{{ site.contact_person }}" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;">
+        </div>
+        <div>
+          <label style="display:block;margin-bottom:5px;font-weight:600;">Contact Email</label>
+          <input type="email" name="email" value="{{ site.email }}" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;">
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px;">
+        <div>
+          <label style="display:block;margin-bottom:5px;font-weight:600;">Phone Number (Text Display)</label>
+          <input type="text" name="phone" value="{{ site.phone }}" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;">
+        </div>
+        <div>
+          <label style="display:block;margin-bottom:5px;font-weight:600;">Phone Number (Call Link - No spaces/special chars)</label>
+          <input type="text" name="phone_href" value="{{ site.phone_href }}" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;">
+        </div>
+      </div>
+
+      <div style="margin-bottom:15px;">
+        <label style="display:block;margin-bottom:5px;font-weight:600;">Address</label>
+        <input type="text" name="address" value="{{ site.address }}" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;">
+      </div>
+
+      <div style="margin-bottom:15px;">
+        <label style="display:block;margin-bottom:5px;font-weight:600;">Footer Text (e.g. By Supreme International)</label>
+        <input type="text" name="footer_text" value="{{ site.footer_text }}" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;">
+      </div>
+
+      <!-- Group 2: Homepage Settings -->
+      <h3 style="border-bottom:2px solid var(--primary);padding-bottom:5px;margin-top:30px;margin-bottom:15px;color:var(--primary-dark)">2. Homepage Content</h3>
+      
+      <div style="margin-bottom:15px;">
+        <label style="display:block;margin-bottom:5px;font-weight:600;">Hero Banner Subtitle (below the main slogan)</label>
+        <textarea name="hero_subtitle" rows="3" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;font-family:inherit;">{{ site.hero_subtitle }}</textarea>
+      </div>
+
+      <h4 style="margin-bottom:10px;color:var(--primary-dark)">Stats Counters:</h4>
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:15px; margin-bottom:20px;">
+        <div>
+          <label style="display:block;margin-bottom:5px;font-size:0.85rem;font-weight:600;">Stat 1 Number</label>
+          <input type="text" name="stat1_num" value="{{ site.stat1_num }}" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;">
+          <label style="display:block;margin-top:5px;margin-bottom:5px;font-size:0.85rem;font-weight:600;">Stat 1 Label</label>
+          <input type="text" name="stat1_lbl" value="{{ site.stat1_lbl }}" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;">
+        </div>
+        <div>
+          <label style="display:block;margin-bottom:5px;font-size:0.85rem;font-weight:600;">Stat 2 Number</label>
+          <input type="text" name="stat2_num" value="{{ site.stat2_num }}" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;">
+          <label style="display:block;margin-top:5px;margin-bottom:5px;font-size:0.85rem;font-weight:600;">Stat 2 Label</label>
+          <input type="text" name="stat2_lbl" value="{{ site.stat2_lbl }}" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;">
+        </div>
+        <div>
+          <label style="display:block;margin-bottom:5px;font-size:0.85rem;font-weight:600;">Stat 3 Number</label>
+          <input type="text" name="stat3_num" value="{{ site.stat3_num }}" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;">
+          <label style="display:block;margin-top:5px;margin-bottom:5px;font-size:0.85rem;font-weight:600;">Stat 3 Label</label>
+          <input type="text" name="stat3_lbl" value="{{ site.stat3_lbl }}" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;">
+        </div>
+        <div>
+          <label style="display:block;margin-bottom:5px;font-size:0.85rem;font-weight:600;">Stat 4 Number</label>
+          <input type="text" name="stat4_num" value="{{ site.stat4_num }}" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;">
+          <label style="display:block;margin-top:5px;margin-bottom:5px;font-size:0.85rem;font-weight:600;">Stat 4 Label</label>
+          <input type="text" name="stat4_lbl" value="{{ site.stat4_lbl }}" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;">
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px;">
+        <div>
+          <label style="display:block;margin-bottom:5px;font-weight:600;">Quality Block Title</label>
+          <input type="text" name="quality_title" value="{{ site.quality_title }}" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;">
+          <label style="display:block;margin-top:5px;margin-bottom:5px;font-weight:600;">Quality Block Text</label>
+          <input type="text" name="quality_text" value="{{ site.quality_text }}" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;">
+        </div>
+        <div>
+          <label style="display:block;margin-bottom:5px;font-weight:600;">Industry Block Title</label>
+          <input type="text" name="industry_title" value="{{ site.industry_title }}" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;">
+          <label style="display:block;margin-top:5px;margin-bottom:5px;font-weight:600;">Industry Block Text</label>
+          <input type="text" name="industry_text" value="{{ site.industry_text }}" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;">
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px;">
+        <div>
+          <label style="display:block;margin-bottom:5px;font-weight:600;">CTA Section Title</label>
+          <input type="text" name="cta_title" value="{{ site.cta_title }}" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;">
+        </div>
+        <div>
+          <label style="display:block;margin-bottom:5px;font-weight:600;">CTA Section Subtitle</label>
+          <input type="text" name="cta_text" value="{{ site.cta_text }}" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;">
+        </div>
+      </div>
+
+      <!-- Group 3: About Page Settings -->
+      <h3 style="border-bottom:2px solid var(--primary);padding-bottom:5px;margin-top:30px;margin-bottom:15px;color:var(--primary-dark)">3. About Page Content</h3>
+      
+      <div style="margin-bottom:15px;">
+        <label style="display:block;margin-bottom:5px;font-weight:600;">Who We Are — Title</label>
+        <input type="text" name="about_who_we_are_title" value="{{ site.about_who_we_are_title }}" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;">
+        <label style="display:block;margin-top:10px;margin-bottom:5px;font-weight:600;">Who We Are — Text Body (use enter for new paragraphs)</label>
+        <textarea name="about_who_we_are_text" rows="5" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;font-family:inherit;">{{ site.about_who_we_are_text }}</textarea>
+      </div>
+
+      <div style="margin-bottom:15px;">
+        <label style="display:block;margin-bottom:5px;font-weight:600;">What We Offer — Title</label>
+        <input type="text" name="about_what_we_offer_title" value="{{ site.about_what_we_offer_title }}" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;">
+        <label style="display:block;margin-top:10px;margin-bottom:5px;font-weight:600;">What We Offer — Items (one item per line)</label>
+        <textarea name="about_what_we_offer_text" rows="4" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;font-family:inherit;">{{ site.about_what_we_offer_text }}</textarea>
+      </div>
+
+      <div style="margin-bottom:15px;">
+        <label style="display:block;margin-bottom:5px;font-weight:600;">Sustainability — Title</label>
+        <input type="text" name="about_sustainability_title" value="{{ site.about_sustainability_title }}" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;">
+        <label style="display:block;margin-top:10px;margin-bottom:5px;font-weight:600;">Sustainability — Items (one item per line)</label>
+        <textarea name="about_sustainability_text" rows="4" required style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;font-family:inherit;">{{ site.about_sustainability_text }}</textarea>
+      </div>
+
+      <div style="margin-top:30px;">
+        <button type="submit" class="btn btn-primary" style="margin:0;padding:12px 36px;font-size:1rem;">Save All Changes</button>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

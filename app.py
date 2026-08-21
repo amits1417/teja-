@@ -30,7 +30,7 @@ ADMIN_PASSWORD_HASH = generate_password_hash(
     os.environ.get("TEJA_ADMIN_PASS", "teja123")
 )
 
-SITE = {
+DEFAULT_SETTINGS = {
     "name": "PEKTRON PACKING SOLUTIONS",
     "contact_person": "SHREYAS",
     "phone": "+91 97279 33639",
@@ -39,7 +39,56 @@ SITE = {
     "tagline": "PREMIUM PACKAGING SOLUTIONS PROVIDER",
     "address": "195, Ground Floor Shantivan Society, Vibhag -1, Near Bhumi Park Society, Sarthana Jakatnaka, Surat - 395006",
     "footer_text": "By Supreme International",
+    "hero_subtitle": "Premium rigid packaging solutions - bottles, jars, caps and pumps manufactured in-house with complete control from development to delivery.",
+    "about_who_we_are_title": "Who We Are",
+    "about_who_we_are_text": "PEKTRON PACKING SOLUTIONS is a leading manufacturer of premium plastic packaging solutions. We specialize in bottles, jars, and caps that help brands elevate product presentation and shelf appeal. Our commitment to quality and innovation adds measurable value to every product we package.\n\nWe also stock and import a wide range of packaging components - closures, trigger pumps, cream pumps, spray pumps, airless bottles, containers, and plastic cosmetic jars and bottles - offering complete and customizable packaging solutions under one roof.",
+    "about_what_we_offer_title": "What We Offer",
+    "about_what_we_offer_text": "3D Prototyping - Review form, functionality and accessibility before tooling.\nIn-house Tooling - From custom tooling to finished packaging, all managed under one roof.\nQuality Control - Superior quality across every step of production.",
+    "about_sustainability_title": "Sustainability",
+    "about_sustainability_text": "We integrate recycled and renewable materials across our processes:\n100% PCR PET solutions\n25-50% PCR HDPE blow-moulded products\nWheat grass-based & bamboo fibre renewable alternatives",
+    "stat1_num": "Pan India",
+    "stat1_lbl": "Nationwide Presence",
+    "stat2_num": "750+",
+    "stat2_lbl": "SKU",
+    "stat3_num": "In-house",
+    "stat3_lbl": "Lotion Pumps",
+    "stat4_num": "Custom",
+    "stat4_lbl": "Tooling & Finishing",
+    "quality_title": "Quality & Precision",
+    "quality_text": "Strict quality control at every step of production.",
+    "industry_title": "Industries We Serve",
+    "industry_text": "Cosmetic, skincare, personal care and custom OEM.",
+    "cta_title": "Need a custom packaging solution?",
+    "cta_text": "From 3D prototyping to tooling, manufacturing and finishing - all in-house.",
 }
+
+class DynamicSiteSettings(dict):
+    def __getitem__(self, key):
+        try:
+            conn = sqlite3.connect(DB_PATH)
+            conn.row_factory = sqlite3.Row
+            row = conn.execute("SELECT value FROM settings WHERE key=?", (key,)).fetchone()
+            conn.close()
+            if row is not None:
+                return row["value"]
+        except Exception:
+            pass
+        return DEFAULT_SETTINGS.get(key)
+
+    def __contains__(self, key):
+        return key in DEFAULT_SETTINGS
+
+    def get(self, key, default=None):
+        val = self[key]
+        return val if val is not None else default
+
+    def keys(self):
+        return DEFAULT_SETTINGS.keys()
+
+    def items(self):
+        return [(k, self[k]) for k in self.keys()]
+
+SITE = DynamicSiteSettings()
 
 DEFAULT_CATEGORIES = [
     {"name": "COSMETIC", "image": "cat_cosmetic.png",
@@ -113,6 +162,16 @@ def init_db():
         created_at TEXT,
         FOREIGN KEY(category_id) REFERENCES categories(id) ON DELETE SET NULL
     );
+    CREATE TABLE IF NOT EXISTS settings (
+        key TEXT PRIMARY KEY,
+        value TEXT NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS banners (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        image TEXT NOT NULL,
+        title TEXT,
+        position INTEGER DEFAULT 0
+    );
     """)
     conn.commit()
     conn.close()
@@ -120,6 +179,37 @@ def init_db():
 
 def seed_defaults():
     conn = get_db()
+    
+    # Settings (insert only if not present)
+    for k, v in DEFAULT_SETTINGS.items():
+        existing = conn.execute("SELECT COUNT(*) c FROM settings WHERE key=?", (k,)).fetchone()["c"]
+        if existing == 0:
+            conn.execute("INSERT INTO settings (key, value) VALUES (?,?)", (k, v))
+            
+    # Banners (insert defaults if table is empty and copy images to static/uploads)
+    existing_banners = conn.execute("SELECT COUNT(*) c FROM banners").fetchone()["c"]
+    if existing_banners == 0:
+        default_banners = [
+            ("banner1.jpg", "Pektron Packaging Solutions Catalog"),
+            ("banner2.jpg", "Pektron Packaging Solutions Products"),
+            ("banner3.jpg", "Glass Packaging Solutions"),
+            ("banner4.jpg", "Pektron Cosmetic Packaging"),
+            ("banner5.jpg", "Pack Your Brand - Glass Range")
+        ]
+        import shutil
+        for i, (fn, title) in enumerate(default_banners):
+            src = os.path.join(BASE_DIR, "static", "images", fn)
+            dest = os.path.join(UPLOAD_DIR, fn)
+            if os.path.exists(src) and not os.path.exists(dest):
+                try:
+                    shutil.copy2(src, dest)
+                except Exception:
+                    pass
+            conn.execute(
+                "INSERT INTO banners (image, title, position) VALUES (?,?,?)",
+                (fn, title, i)
+            )
+
     # Categories (with image + description)
     existing_cat = {row["name"] for row in conn.execute("SELECT name FROM categories").fetchall()}
     cat_ids = {}
@@ -172,8 +262,9 @@ def home():
         "LEFT JOIN categories c ON p.category_id=c.id "
         "ORDER BY p.position, p.id DESC LIMIT 8"
     ).fetchall()
+    banners = conn.execute("SELECT * FROM banners ORDER BY position, id").fetchall()
     conn.close()
-    return render_template("index.html", cats=cats, featured=featured, site=SITE)
+    return render_template("index.html", cats=cats, featured=featured, site=SITE, banners=banners)
 
 
 @app.route("/about")
@@ -261,9 +352,10 @@ def admin_dashboard():
     conn = get_db()
     cat_count = conn.execute("SELECT COUNT(*) c FROM categories").fetchone()["c"]
     prod_count = conn.execute("SELECT COUNT(*) c FROM products").fetchone()["c"]
+    banner_count = conn.execute("SELECT COUNT(*) c FROM banners").fetchone()["c"]
     conn.close()
     return render_template("admin/dashboard.html", cat_count=cat_count,
-                           prod_count=prod_count, site=SITE)
+                           prod_count=prod_count, banner_count=banner_count, site=SITE)
 
 
 @app.route("/admin/categories", methods=["GET", "POST"])
@@ -381,6 +473,64 @@ def admin_product_edit(pid=None):
         return redirect(url_for("admin_products"))
     conn.close()
     return render_template("admin/edit_product.html", prod=prod, cats=cats, site=SITE)
+
+
+@app.route("/admin/banners", methods=["GET", "POST"])
+@login_required
+def admin_banners():
+    conn = get_db()
+    if request.method == "POST":
+        action = request.form.get("action")
+        if action == "add":
+            title = request.form.get("title")
+            pos = int(request.form.get("position") or 0)
+            image_file = request.files.get("image")
+            image_name = save_image(image_file)
+            if image_name:
+                conn.execute(
+                    "INSERT INTO banners (image, title, position) VALUES (?,?,?)",
+                    (image_name, title, pos)
+                )
+                conn.commit()
+                flash("Banner added successfully.", "success")
+            else:
+                flash("Please upload a valid image.", "danger")
+        elif action == "delete":
+            bid = request.form.get("id")
+            banner = conn.execute("SELECT image FROM banners WHERE id=?", (bid,)).fetchone()
+            if banner:
+                try:
+                    os.remove(os.path.join(app.config["UPLOAD_FOLDER"], banner["image"]))
+                except Exception:
+                    pass
+                conn.execute("DELETE FROM banners WHERE id=?", (bid,))
+                conn.commit()
+                flash("Banner deleted.", "success")
+    
+    banners = conn.execute("SELECT * FROM banners ORDER BY position, id").fetchall()
+    conn.close()
+    return render_template("admin/banners.html", banners=banners, site=SITE)
+
+
+@app.route("/admin/settings", methods=["GET", "POST"])
+@login_required
+def admin_settings():
+    conn = get_db()
+    if request.method == "POST":
+        for k in DEFAULT_SETTINGS.keys():
+            val = request.form.get(k)
+            if val is not None:
+                conn.execute(
+                    "INSERT OR REPLACE INTO settings (key, value) VALUES (?,?)",
+                    (k, val)
+                )
+        conn.commit()
+        conn.close()
+        flash("Website settings updated successfully.", "success")
+        return redirect(url_for("admin_settings"))
+        
+    conn.close()
+    return render_template("admin/settings.html", site=SITE)
 
 
 # ---------------- Image helper ----------------
