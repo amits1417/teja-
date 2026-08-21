@@ -31,12 +31,17 @@ ADMIN_PASSWORD_HASH = generate_password_hash(
 )
 
 SITE = {
-    "name": "TEJA International",
-    "phone": "+91 878 051 5529",
-    "phone_href": "918780515529",
-    "email": "info@tejainternational.com",
-    "tagline": "One Stop Solution to Rigid Packaging",
+    "name": "PEKTRON PACKING SOLUTIONS",
+    "contact_person": "SHREYAS",
+    "phone": "+91 97279 33639",
+    "phone_href": "919727933639",
+    "email": "supreme.international1011@gmail.com",
+    "tagline": "PREMIUM PACKAGING SOLUTIONS PROVIDER",
+    "address": "195, Ground Floor Shantivan Society, Vibhag -1, Near Bhumi Park Society, Sarthana Jakatnaka, Surat - 395006",
+    "footer_text": "By Supreme International",
 }
+
+DEFAULT_CATEGORIES = ["COSMETIC", "SKINCARE", "PERSONAL CARE", "CUSTOM OEM"]
 
 
 # ---------------- DB helpers ----------------
@@ -73,6 +78,20 @@ def init_db():
         FOREIGN KEY(category_id) REFERENCES categories(id) ON DELETE SET NULL
     );
     """)
+    conn.commit()
+    conn.close()
+
+
+def seed_defaults():
+    conn = get_db()
+    existing = {row["name"] for row in conn.execute("SELECT name FROM categories").fetchall()}
+    for i, name in enumerate(DEFAULT_CATEGORIES):
+        if name not in existing:
+            conn.execute(
+                "INSERT INTO categories (name, slug, position) VALUES (?,?,?)",
+                (name, slugify(name), i),
+            )
+            existing.add(name)
     conn.commit()
     conn.close()
 
@@ -320,6 +339,7 @@ def save_image(file, existing=None):
 
 
 init_db()
+seed_defaults()
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

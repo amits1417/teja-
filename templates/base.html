@@ -49,8 +49,10 @@
       <div>
         <h4>{{ site.name }}</h4>
         <p>{{ site.tagline }}</p>
+        <p>Contact: {{ site.contact_person }}</p>
         <p>Phone: <a href="tel:{{ site.phone_href }}">{{ site.phone }}</a></p>
         <p>Email: <a href="mailto:{{ site.email }}">{{ site.email }}</a></p>
+        <p>{{ site.address }}</p>
       </div>
       <div>
         <h4>Quick Links</h4>
@@ -66,7 +68,7 @@
     </div>
     <div class="footer-bottom">
       <div class="container">
-        &copy; {{ now.year if now else 2026 }} {{ site.name }}. All Rights Reserved.
+        &copy; {{ 2026 }} {{ site.name }} — {{ site.footer_text }}.
       </div>
     </div>
   </footer>

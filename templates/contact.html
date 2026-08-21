@@ -11,8 +11,10 @@
   <div class="container contact-grid">
     <div class="contact-info">
       <h3>{{ site.name }}</h3>
+      <p>Contact Person: {{ site.contact_person }}</p>
       <p>Phone: <a href="tel:{{ site.phone_href }}">{{ site.phone }}</a></p>
       <p>Email: <a href="mailto:{{ site.email }}">{{ site.email }}</a></p>
+      <p>Address: {{ site.address }}</p>
     </div>
     <form class="contact-form" method="post">
       <label>Full Name
