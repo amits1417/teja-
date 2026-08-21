@@ -8,10 +8,17 @@
   </div>
 </section>
 <section class="section">
-  <div class="container narrow">
-    <h2 class="section-title">Who We Are</h2>
-    <p>{{ site.name }} is a leading manufacturer of premium plastic packaging solutions. We specialize in bottles, jars, and caps that help brands elevate product presentation and shelf appeal. Our commitment to quality and innovation adds measurable value to every product we package.</p>
-    <p>We also stock and import a wide range of packaging components - closures, trigger pumps, cream pumps, spray pumps, airless bottles, containers, and plastic cosmetic jars and bottles - offering complete and customizable packaging solutions under one roof.</p>
+  <div class="container">
+    <div class="about-grid">
+      <div>
+        <h2 class="section-title" style="text-align:left">Who We Are</h2>
+        <p>{{ site.name }} is a leading manufacturer of premium plastic packaging solutions. We specialize in bottles, jars, and caps that help brands elevate product presentation and shelf appeal. Our commitment to quality and innovation adds measurable value to every product we package.</p>
+        <p>We also stock and import a wide range of packaging components - closures, trigger pumps, cream pumps, spray pumps, airless bottles, containers, and plastic cosmetic jars and bottles - offering complete and customizable packaging solutions under one roof.</p>
+      </div>
+      <div>
+        <img src="{{ url_for('uploaded_file', filename='content_about.png') }}" alt="Our Facility" class="about-img">
+      </div>
+    </div>
 
     <h2 class="section-title">What We Offer</h2>
     <ul class="offer-list">
